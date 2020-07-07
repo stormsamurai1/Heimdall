@@ -21,6 +21,8 @@ function createWindow(){
                         }
                     });
 
+    mainWindow.removeMenu();
+
     mainWindow.loadURL(startUrl);
 
     mainWindow.on('closed',function(){
