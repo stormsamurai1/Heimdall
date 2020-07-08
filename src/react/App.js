@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
 
-function App() {
+import Main from './Components/Main/Main.js'
 
-  return (
-    <div className="App">
-      
-    </div>
+export default function App() {
+
+  return(
+    <Main/>
   );
 }
-
-export default App;
