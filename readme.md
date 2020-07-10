@@ -6,8 +6,8 @@
 
     - Electron
     - React
-    - Redux [?]
-    - Styled-Components [?]
+    - Redux
+    - Styled-Components
 
 # Requisitos funcionais
 
