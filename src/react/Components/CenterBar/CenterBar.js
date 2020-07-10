@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 
 import axios from 'axios'
 
+import { connect } from 'react-redux'
+
 import {
     CenterBarContainer,
     Header,
@@ -12,26 +14,31 @@ import {
     VerbsPicker
 } from './Styles'
 
-export default function CenterBar() {
+function CenterBar({requestInformation, response, dispatch}) {
 
-    const [url, setUrl] = useState("http://localhost:3333")
-    const [httpVerb, setHttpVerb] = useState("get")
+    const [baseurl, setBaseurl] = useState(requestInformation.baseurl)
+    const [httpVerb, setHttpVerb] = useState(requestInformation.httpVerb)
+    
 
+    function setResponseData(response){
+        return{
+            type:'SET_RESPONSE_DATA',
+            response
+        }
+    }
 
     async function handleSendRequest() {
-        const api = axios.create({
-            baseURL: url
-        })
+        const api = axios.create()
 
         try{
             const res = await api({
                 method: httpVerb,
-                url: url
+                url: baseurl
             });
-            console.log(JSON.stringify(res.data))
-        
+            dispatch(setResponseData(res))
+
         }catch(e){
-            console.log(JSON.stringify(e.message))
+            dispatch(setResponseData(e.message))
         }    
     }
 
@@ -39,7 +46,7 @@ export default function CenterBar() {
         <CenterBarContainer>
             <Header>
                 <HttpVerbSelectorContainer>
-                    <VerbsSelector onChange={(e)=>setHttpVerb(e.currentTarget.value)}>
+                    <VerbsSelector onChange={(e)=> setHttpVerb(e.currentTarget.value)}>
                         <VerbsPicker value="get" >GET</VerbsPicker>
                         <VerbsPicker value="put">PUT</VerbsPicker>
                         <VerbsPicker value="post">POST</VerbsPicker>
@@ -47,7 +54,7 @@ export default function CenterBar() {
                     </VerbsSelector>
                 </HttpVerbSelectorContainer>
             
-                <UrlInputArea value={url} onchange={(e) => setUrl(e.target.value)}/>
+                <UrlInputArea value={baseurl} onChange={(e) => setBaseurl(e.target.value)}/>
                 
                 <SubmitRequestButton onClick={handleSendRequest}>
                     Enviar!
@@ -57,3 +64,5 @@ export default function CenterBar() {
               
     )
 }
+
+export default connect(state => ({ requestInformation: state.requestInformation, response:  state.responseInformation}))(CenterBar);
