@@ -4,6 +4,8 @@ import axios from 'axios'
 
 import { connect } from 'react-redux'
 
+import * as responseHandlers from '../../../store/actions/response'
+
 import {
     CenterBarContainer,
     Header,
@@ -14,18 +16,11 @@ import {
     VerbsPicker
 } from './Styles'
 
-function CenterBar({requestInformation, response, dispatch}) {
+function CenterBar({requestInformation, dispatchResponseData}) {
 
     const [baseurl, setBaseurl] = useState(requestInformation.baseurl)
     const [httpVerb, setHttpVerb] = useState(requestInformation.httpVerb)
     
-
-    function setResponseData(response){
-        return{
-            type:'SET_RESPONSE_DATA',
-            response
-        }
-    }
 
     async function handleSendRequest() {
         const api = axios.create()
@@ -35,10 +30,10 @@ function CenterBar({requestInformation, response, dispatch}) {
                 method: httpVerb,
                 url: baseurl
             });
-            dispatch(setResponseData(res))
+            dispatchResponseData(res)
 
         }catch(e){
-            dispatch(setResponseData(e.message))
+            dispatchResponseData(e.message)
         }    
     }
 
@@ -65,4 +60,12 @@ function CenterBar({requestInformation, response, dispatch}) {
     )
 }
 
-export default connect(state => ({ requestInformation: state.requestInformation, response:  state.responseInformation}))(CenterBar);
+const mapStateToProps = (state) => ({
+    requestInformation: state.response.requestInformation
+})
+
+const mapDispatchToProps = (dispatch) => ({
+    dispatchResponseData : (data) => dispatch(responseHandlers.setResponseData(data))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(CenterBar);

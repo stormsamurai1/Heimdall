@@ -8,8 +8,6 @@ import { RightSideBar,
          ResponseVisualizationText } from './Styles'
 
 function RightBar({ responseInformation }){
-    const [response, setResponse] = useState("")
-    console.log(responseInformation)
     return(
         <RightSideBar>
              <InputContainer>
@@ -27,5 +25,9 @@ function RightBar({ responseInformation }){
     )
 }
 
+const mapStateToProps = (state) => ({
+    responseInformation: state.response.responseInformation,
+})
 
-export default connect(state => ({ responseInformation: state.responseInformation }))(RightBar);
+
+export default connect(mapStateToProps)(RightBar);
